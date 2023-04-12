@@ -1,7 +1,5 @@
 &MICRO_M2005
-douse_reffc = .true.
 dopredictNc  = .true.
-ccnconst = 100.
 /
 &SGS_TKE
 dosmagor = .true.
@@ -9,76 +7,93 @@ dosmagor = .true.
 
 &PARAMETERS
 
- caseid ='128x128x100_100m_40m_3s',
+caseid ='25m_1s_ent',
 
- nrestart = 0,
+nrestart = 0,
+nrestart_skip=59,
+restart_sep = .true.,
 
- perturb_type = 5, 
+perturb_type = 5, 
 
- OCEAN = .true.,
+OCEAN = .true.,
 
- ug = -8.,
- vg = 0., 
+dosgs                   = .true.,
+dodamping               = .true.,
+doupperbound  	        = .true.,
+docloud                 = .true.,
+doprecip                = .true., 
+dosurface               = .true.,
+dolargescale            = .true.,
+dosfcforcing            = .true.,
+dodynamicocean          = .false.,
+docoriolis              = .true.,
+donudging_uv            = .false.,
+donudging_tq            = .false.,
 
- dosgs		= .true.,
- dodamping 	= .true.,
- doupperbound  	= .true.,
- docloud 	= .true.,
- doprecip 	= .false., 
- dolongwave	= .false.,
- doshortwave	= .false.,
- dosurface 	= .true.,
- dolargescale 	= .true.,
- doradforcing   = .false.,
- dosfcforcing   = .true.,
- docoriolis 	= .true.,
- donudging_uv   = .false.,
- donudging_tq   = .false.,
+! Entrainment
+doentrainment           = .true.,
+dotracers               = .true.,
 
- tauls = 43200.,
+! Radiation
+nrad = 180
 
- SFC_FLX_FXD    = .true.,
- SFC_TAU_FXD    = .true.,
+doradforcing            = .false.,
+dolongwave              = .true.,
+doshortwave             = .true.,
+doperpetual             = .true.,
+doseasons               = .false.,
+dosolarconstant         = .true.,
+solar_constant          = 447.9211,
+zenith_angle            = 51.0198,
 
- fcor = 0.376e-4,
+! SCAM IOP settings
+doscamiopdata           = .false.,
 
- day0=180.,
+SFC_FLX_FXD             = .false.,
+SFC_TAU_FXD             = .false.,
 
- dx = 	80.,
- dy = 	80.,
+fcor                    = 0.376e-4,
+tabs_s                  = 300.,
 
- dt = 	3.,
- 
- nrad = 15,
- longitude0 = 0.,
- latitude0 = 18.,
- doseasons = .false.,
+ug = -8.,
+vg = 0., 
 
- nstop 	= 7200,
- nprint	= 30,
- nstat 	= 100,
- nstatfrq= 10,
+dx = 25.,
+dy = 25.,
 
-doSAMconditionals = .true.
-dosatupdnconditionals = .true.
+dt = 1.,
 
+longitude0 = 0.,
+latitude0 = 18.,
 
- nsave2D	= 100,
- nsave2Dstart	= 9936000,
- nsave2Dend	= 999164000,
- save2Dbin      = .false.
+day0 = 180.,
 
- nsave3D	= 100,
- nsave3Dstart	= 9936000,
- nsave3Dend	= 999999999,
- save3Dbin      = .false.
+nstop                   = 86400,
+nprint                  = 60,
+nstat                   = 60,
+nstatfrq                = 60,
 
- nstatmom       = 100
- nstatmomstart  = 9936000
- nstatmomend    = 99960480
- savemombin = .false.
+doSAMconditionals       = .true.
+dosatupdnconditionals   = .true.
 
-/ 
+nsave2D                 = 100,
+nsave2Dstart            = 999999999,
+nsave2Dend              = 999999999,
+save2Dbin               = .false.,
 
+nsave3D                 = 60,
+nsave3Dstart            = 999999999,
+nsave3Dend              = 999999999,
+save3Dbin               = .true.,
 
+nent3D                  = 60,
+nent3Dstart             = 999999999,
+nent3Dend               = 999999999,
+ent3Dbin                = .true.,
 
+nstatmom                = 100,
+nstatmomstart           = 999999999,
+nstatmomend             = 999999999,
+savemombin              = .false.,
+
+/

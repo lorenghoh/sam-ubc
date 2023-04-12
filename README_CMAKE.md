@@ -16,7 +16,7 @@ all the necessary files/folders/symlinks.
 
  2. Edit SRC/domain.f90 to set domain size and number of sub-domains
 
- 3. Edit CMakeLists.txt and set the corresponding netcdf and openmpi
+ 3. Edit CMakeLists.txt and set the corresponding NETCDF and openMPI
     library links (Intel compilers recommended)
  
  4. Use cmake_snippets from the repository
@@ -26,7 +26,7 @@ all the necessary files/folders/symlinks.
         e.g. cmake /home/loh/SAM
 
  5. The cmake script should have automatically linked all the necessary
-files, but you are responsible for copying and modyfying case-related
+files, but you are responsible for copying and modifying case-related
 files (along with SAM/CaseName)
 
  6. Create output directories:
