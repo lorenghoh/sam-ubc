@@ -1,0 +1,160 @@
+!=====================================================================================
+! subroutine transfer_coef
+! Note:
+! 	Computes turbulent transfer coefficients for momentum, heat and water vapor 
+!	following Monin-Obukhov Similarity
+! 	orginal : landflx.f90 in SAM, coded by Marat Khairoutdinov (C) 2003
+! 	changes : z0h for heat transfer is defined separately from the z0 for momentum transfer 
+! 		  parameterization for z0h follows Yang(2008) method
+! History: March, 2016
+!=====================================================================================
+
+SUBROUTINE transfer_coef(p_ref,ts,th,qh,qs,uh,vh,h,z0sfc,disp,iind,jind)
+use slm_vars, only : rgas, cp, pres0,pii, epsv,DBL,xsi, mom_trans_coef, heat_trans_coef, ustar, tstar, RiB, r_a, vel_m
+implicit none
+
+! Input:
+REAL,INTENT(IN) :: p_ref   ! surface pressure, mb
+REAL, INTENT(IN) :: th   ! temperature at height h(h = lowest model height)
+REAL (KIND=DBL), INTENT(IN) :: ts   ! Temperature at z0
+REAL, INTENT(IN) :: qh   ! q at h
+REAL (KIND=DBL), INTENT(IN) :: qs   ! q at bottom
+REAL, INTENT(IN) :: uh   ! zonal wind at height h
+real,INTENT(IN) :: vh   ! merid wind at height h
+real,intent(in) :: h    ! height h
+real (KIND=DBL), intent(in) :: z0sfc ! roughness length at surface level
+real (KIND=DBL), intent(in) :: disp ! displacement height
+INTEGER , INTENT(IN) :: iind, jind ! indices
+
+! List of parameter
+! Businger : xsi>-2 (unstable) 
+real (kind=DBL), parameter :: kk = 0.35_DBL
+real(kind=DBL), parameter :: pr0 = 0.74_DBL
+real(kind=DBL), parameter :: betam = 4.7_DBL
+real(kind=DBL), parameter :: betah = 4.7_DBL/pr0 
+real(kind=DBL), parameter :: gammam = 15._DBL
+real(kind=DBL), parameter :: gammah = 9._DBL
+
+! Dyer and HIcks : 1>|xsi|>0  
+!real, parameter :: kk = 0.41
+!real, parameter :: pr0 = 1.
+!real, parameter :: betam = 5.
+!real, parameter :: betah = 5.
+!real, parameter :: gammam = 16.
+!real, parameter :: gammah = 16.
+        
+! List of local variable
+real(kind=DBL) r, x, vel 
+real(kind=DBL) a, b, c, dd 
+real(kind=DBL) xm, xh, xsi1,xsi2,xsii, dxsi
+real(kind=DBL) gm1, gh1, fm1, fh1,ffh,fm
+real(kind=DBL) coef1, coef2, pt_sfc, pt_ref
+integer i,j, iter
+real(kind=DBL) xsi_min, z0hsfc, xsi0, xsi0h
+
+
+gm1(x)=(1.0_DBL-gammam*x)**0.25_DBL   
+gh1(x)=sqrt(1.0_DBL-gammah*x)/pr0 
+fm1(x)=2._DBL*log((1.0_DBL+x)*0.5_DBL)+log((1.0_DBL+x*x)*0.5_DBL)-2.0_DBL*atan(x)+pii*0.5_DBL  ! [ABL, Garratt] Eq. 3.35
+fh1(x)=2._DBL*log((1.0_DBL+x)*0.5_DBL)  
+
+coef1 = (1000._DBL/pres0)**(rgas/cp)
+coef2 = (1000._DBL/DBLE(p_ref))**(rgas/cp)
+
+pt_sfc = ts * coef1 ! change surface level t to potential t
+pt_ref = DBLE(th) * coef2 ! change reference level t to potential t
+
+! Add additional velocity depending on the stratification
+if((pt_ref-pt_sfc).ge.0._DBL) then
+	vel = sqrt(DBLE(uh)**2+DBLE(vh)**2+0.1_DBL**2)
+else	
+	vel = sqrt(DBLE(uh)**2+DBLE(vh)**2+1.0_DBL)
+END IF
+
+
+! bulk richardson number
+r=9.81_DBL/pt_sfc*(pt_ref*(1._DBL+epsv*DBLE(qh))-pt_sfc*(1._DBL+epsv*qs))*(DBLE(h)-disp)/(vel**2) ! bulk richardson number
+r = min(r, 0.2_DBL)
+
+
+! Zeng and Dickinson (1998)
+!	z0hsfc = z0sfc*exp(-1.*0.13*(ustar(i,j)*z0sfc/(1.5e-5))**0.45)
+! Yang (2008)
+ z0hsfc = max(0.0001_DBL,(70._DBL*1.5e-5_DBL/ustar(iind,jind))&
+	*exp(-7.2_DBL*sqrt(ustar(iind,jind))*((abs(tstar(iind,jind)))**0.25_DBL)))
+
+iter = 0
+dxsi = 1.e5_DBL
+	
+if(r.lt.0._DBL) then  ! Unstable condition [ Ri < 0]
+   xsi=-0.01_DBL ! Start from xsi = -0.01 ; 
+!	xsi(i,j) = 0. 	
+	DO
+	iter = iter + 1
+	xsi0 = xsi*z0sfc/(DBLE(h)-disp) ! Monin Obukhov stability parameter at z = z0sfc
+	xsi0h = xsi*z0hsfc/(DBLE(h)-disp)
+
+        xm=gm1(xsi)  ! xsi = (h-disp(i,j))/L
+        xh=gh1(xsi)
+
+		
+        fm=log((DBLE(h)-disp)/z0sfc)-fm1(xm)+fm1(gm1(xsi0))   ! [ABL, Garratt] Eq. 3.34 : Logarithmic wind law : fm = ku/ustar
+        ffh=pr0*(log((DBLE(h)-disp)/z0hsfc)-fh1(xh)+fh1(gh1(xsi0h)))
+        	
+	xsi1=r/ffh*(fm*fm) 
+
+
+       	dxsi=min(xsi-xsi1, dxsi) ! Difference between Ri and xsi
+	xsi = xsi1 ! replace old xsi with new xsi
+	xsi = max(xsi, -2.0_DBL)
+	if((iter.gt.4)) then !.or.(dxsi.lt.0.01)) then
+			 EXIT
+	end if
+	END DO
+		
+	
+else  ! Stable condition [Ri > 0]
+	
+	
+	! when z0sfc ne z0hsfc
+
+	a = pr0*betah*(1._DBL-(z0hsfc/(DBLE(h)-disp)))-(r*betam**2)*(1._DBL-z0sfc/(DBLE(h)-disp))**2 
+	b = pr0*log((DBLE(h)-disp)/z0hsfc)&
+		-(2._DBL*r*log((DBLE(h)-disp)/z0sfc)*betam*(1._DBL-(z0sfc/(DBLE(h)-disp))))
+	c = -1._DBL*(r*(log((DBLE(h)-disp)/z0sfc))**2)
+
+	dd=sqrt(b*b-4._DBL*a*c)
+	xsi1 = (-1._DBL*b+dd)/(2._DBL*a)
+	xsi2 = (-1._DBL*b-dd)/(2._DBL*a)
+	
+	xsi = max(xsi1,xsi2)
+	if(xsi1.lt.0.0_DBL .and. xsi2.lt.0.0_DBL) WRITE(*,*) 'xsi1 and xsi2 both negative WRONG!!!!'
+	
+	! max xsi = 2.
+	xsi = min(2.0_DBL, xsi)
+
+	xsi0 = xsi*z0sfc/(DBLE(h)-disp) ! Monin Obukhov stability parameter at z = z0sfc
+	xsi0h = xsi*z0hsfc/(DBLE(h)-disp)
+	
+	fm = log((DBLE(h)-disp)/z0sfc) + betam*xsi-betam*xsi0
+	ffh = pr0*(log((DBLE(h)-disp)/z0hsfc)+betah*xsi-betah*xsi0h)
+		
+end if
+
+! drag coefficient C_D = k**2/fm**2
+! heat transfer coefficient C_H = k**2/fm/fh
+!vel(i,j) = sqrt(uh(i,j)**2 + vh(i,j)**2)
+mom_trans_coef = kk**2/fm**2
+heat_trans_coef = kk**2/fm/ffh
+ustar(iind,jind) = sqrt(mom_trans_coef)*vel
+! set ustar > 0.2 to avoid too calm conditions at night for the turbulent transfer
+ustar(iind,jind) = max(0.2_DBL,ustar(iind,jind))
+
+! aerodynamic resistance between surface and reference level
+r_a = ffh/kk/ustar(iind,jind)
+
+vel_m = vel
+RiB = r 
+
+return
+end subroutine transfer_coef 

@@ -1,0 +1,80 @@
+----------------------------------------------------------------
+
+rad_simple.f90
+
+in idealized radiation for STBL, liquid water was excluded in computation of the PBL top as the total water in excess of 8 g/kg.
+was (not two qci's):
+       if(qv(i,j,k)+qci(i,j,k)+qci(i,j,k).gt.0.008) itop=max(itop,k+1) ! note zi(k+1) is inversion hgt
+corrected:
+       if(qv(i,j,k)+qcl(i,j,k)+qci(i,j,k).gt.0.008) itop=max(itop,k+1) ! note zi(k+1) is inversion hgt
+
+
+-----------------------------------------------------------------
+write_fields2D.f90
+
+ground speed (ug, vg) was added to U and V outputs.
+
+-----------------------------------------------------------------
+upperbound.f90
+
+add the nudging/extrapolation tendencies at the model top to the nudging statistics, so that they will be output in the stat file.
+
+-----------------------------------------------------------------
+oceflx.f90
+
+a clarification note was added on the nature of thbot, which is actually fed the surface value of the liquid-ice static energy, rather than theta.  The potential temperature would only work if the surface pressure were used as the reference (rather than the usual 1000 hPa).
+
+-----------------------------------------------------------------
+SGS_TKE/sgs.f90
+
+added writting the SGS_TKE namelist to output namelist *.nml file
+
+-----------------------------------------------------------------
+
+MICRO_M2005/microphysics.f90
+
+- the output labeled total flux (e.g., QSFLX) was actually just the resolved flux.  This was found by Tak, who suggested renaming the variable (e.g., QSFLXR) and changing the longname to clarify that only the resolved flux is output.  If you prefer to fix the code so that the total flux is output, let me know and I can do this.  Note that the separately output QTFLUX is the total flux and is correct.
+- changed extension of output namelist from .namelists to nml to be written to the same file as PARAMETERS namelist.
+
+-----------------------------------------------------------------
+
+MICRO_M2005/module_mp_graupel.f90
+
+Jan 2015 (bloss): Updated module_mp_graupel.f90 to Hugh Morrison's
+  Version 3.5 Release.
+
+Apr 2009 (bloss):
+
+Blossey: " The biggest change is probably that Hugh limited the number concentration of ice to 0.3/cm3 (down from 10/cm3) in an effort to avoid persistent cirrus."
+
+ + Modified scheme to use total water (vapor + cloud liquid) as a
+prognostic variable in place of separate vapor and cloud liquid
+variables.  This should reduce the cost associated with scalar
+advection.  With this scheme, saturation adjustment occurs before
+calling the microphysics, so that a consistent set of temperature,
+water vapor and cloud liquid values can be input to the microphysics.
+This saturation adjustment could be more expensive than the old one
+within the microphysics, since you do not have a reference value of
+cloud liquid to start from.
+
+ + The latent heating due to the microphysics is not readily
+accessible with the total water formulation, so that it is no longer
+output in the statistics.
+
+ + The EFFRQ* effective radius outputs in the past were susceptible to
+errors due to non-uniformity of hydrometeor fractions across
+processors or time steps.  As a result, these outputs have been
+eliminated.  In their place, a new output Q*OEFFR which represents a
+scaled version of the layer optical depth has been added.  This can be
+used to compute a consistent effective radius from the averaged
+optical depth and mixing ratio.  For example, the cloud liquid
+effective radius may be computed as:
+
+  EFFRC = QC / QCOEFFR
+
+where QC is in g/kg, QCOEFFR is in g/kg/micron and EFFRC is in
+microns.
+
+ + The default setting for dopredictNc was changed to .false.
+Now, by default, the cloud liquid droplet concentration will be set to
+Nc0 which itself has a default value of 100./cm3.

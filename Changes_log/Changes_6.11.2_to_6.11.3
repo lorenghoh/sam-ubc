@@ -1,0 +1,7 @@
+* Retired completely the parameters LES amd CEM to avoid constant confusion of users.
+* introduced new parameter LES_S to indicate different sample of cloud ad cloud core for PBL and deep clouds.
+
+hbuffer.f90 fixed issues with averaging cloud base and top height statistics
+statistics.f90: changed the code to remove LES and CEM parameters and implement LES_S
+params.f90.setparams.f90,restart.f90,surface.f90,SGS_TKE/sgs.f90 removed code related to retired LES parameter and added the code to implement new LES_S parameter
+

@@ -1,0 +1,25 @@
+SAM interface to WRF P3 microphysics.
+
+P3 microphysics developed by Hugh Morrison (NCAR) and Jason Milbrandt (Environment Canada).
+
+Interface developed by Guangxing Lin and Jiwen Fan (PNNL).
+Modifications and extensions by Blaz Gasparini and Peter Blossey (UW).
+
+Several options exist in the MICRO_P3 namelist including:
+  - turning on/off prediction of cloud droplet number (log_predictNc, default = false)
+  - properties of two aerosol modes that are used for activation if log_predictNc==.true.
+       (aerosol_mode1_radius, aerosol_mode1_number, aerosol_mode1_sigmag, ...)
+  - option to fix gamma exponent for cloud droplet size distribution (dofix_pgam, default=.false.)
+  - choice of scheme for warm rain microphysics (iWarmRainScheme, default = 3, KK2000)
+  - number of ice categories (nCat, default = 1).   NOTE THAT nCat>1 IS 
+       NOT POSSIBLE IN SAM AT PRESENT.  THE MICROPHYSICS SUPPORTS MULTIPLE ICE CATEGORIES
+       BUT THE SAM INTERFACE WOULD NEED TO BE GENERALIZED TO PERMIT THIS.
+       NOT TECHNICALLY DIFFICULT BUT WOULD TAKE TIME TO COMPLETE AND TEST.
+  - limit on ice cloud number concentration (MaxTotalIceNumber, default = 2.e6 or 2/cm3).
+      
+Limited support is available, but if you find a problem with the interface or microphysics, 
+please email all four of the following people:
+ Marat Khairoutdinov <marat.khairoutdinov@stonybrook.edu>, 
+ Guangxing Lin <guangxing.lin@pnnl.gov>,
+ Peter Blossey <pblossey@gmail.com>,
+ Hugh Morrison <morrison@ucar.edu>.

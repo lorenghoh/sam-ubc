@@ -1,0 +1,16 @@
+SGS_TKE/tke_full.f90
+
+Peter Blossey fixed an issue with some noise generated in the very beginning of runs associated with lack of synchronization between SGS turbulence production terms. This issue occurs only in the updated version of the file introduced in version 6.10.9.
+
+
+stepout.f90
+main.f90
+
+Fixed incorrect printout of water conservation statistics in case when NCYCLE > 1. Does not affect the computations themselves, only printout.
+
+
+write_fields2D.f90
+write_fields3D.f90
+
+Changed the format of writing dx and dy to the output files from f12.0 to f12.5 to allow for correct whiteout of small grid-spacings. Does not affect any computations themselves.
+

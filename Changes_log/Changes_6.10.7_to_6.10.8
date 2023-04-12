@@ -1,0 +1,23 @@
+This update fixes several bugs and adds revised implementation of pressure solver pressure_big.f90 following modifications done by Don Dazlich to CMMAP's version of SAM.  Don has noticed that when using massive number of processors (order of thousand and more), the communication overhead of pressure solver increases dramatically. Apparently, the way how I originally implemented the transpose of subdomains in x and y directions to perform the FFT  is not optimal as I tried to form y slabs directly from x slabs . Don modified the algorithm by adding an additional step of going back to subdomains from x slabs before forming y slabs. Even though it seems like an extra step, but apparently for very large number of processors the revised procedure is much faster as it communication overhead scales as sqrt(#PE), while my original implementation as #PEs. I tested the new implementation and it seems to reproduce the old results bit-by-bit; however, I didn't replace the old one yet until I am really sure that's it's ok. You can use the new subroutine by just replacing pressure_big.f90 with pressure_big.f90.opt . In the case of several thousand of processors, the CPU saving can be very considerable, so I highly recommend it. However, there is virtually no gain for up to couple hundred processors. Don also added a faster FFT package which you download, compile and install on you system, but I retained the old one for portability and for dowally option which does not work yet with the new FFT Don, (is it still true?).
+
+Tak Yamaguchi noticed couple bugs when running with the compiler enforced double precision (thanks, Tak). The affected files:
+
+hbuffer.f90
+variable dummy in hbuf_write() should be declared as real(4) rather than real
+readiopdata.f90
+outCalday should be declared as real rather than real(4)
+Also, several dummy functions were added to task_util_NOMPI.f9000 to be able to compile scalar SAM (no MPI):
+task_receive_float4
+task_bsend_float4
+task_max_real4
+task_min_real4
+
+
+SGS_TKE/diffuse_scalar3D.f90
+This file contained a second redundant dowally if-block, which is now removed. in the first dowally if-block, replace do i=1,ny with do i=1,nx. Because of the second redundant block this bug did not affect the solution.
+
+ 
+I also added some code for dowallx=.true. and dowally=.true. to make sure that the SGS fluxes of velocities parallel to the vertical walls are zero. Affected files:
+SGS_TKE/diffuse_mom2D.f90
+SGS_TKE/diffuse_mom3D.f90
+

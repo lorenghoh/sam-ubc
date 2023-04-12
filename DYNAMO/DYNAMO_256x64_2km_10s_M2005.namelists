@@ -1,0 +1,25 @@
+ &MICRO_M2005
+ DOICEMICRO      = T,
+ DOGRAUPEL       = T,
+ DOHAIL  = F,
+ DOSB_WARM_RAIN  = F,
+ DOPREDICTNC     = F,
+ DOSPECIFYAEROSOL        = F,
+ DOSUBGRIDW      = F,
+ DOARCTICICENUCL = F,
+ DOCLOUDEDGEACTIVATION   = F,
+ NC0     =   100.0000    ,
+ CCNCONST        =   120.0000    ,
+ CCNEXPNT        =  0.4000000    ,
+ AER_RM1 =  5.2000001E-02,
+ AER_RM2 =   1.300000    ,
+ AER_N1  =   72.20000    ,
+ AER_N2  =   1.800000    ,
+ AER_SIG1        =   2.040000    ,
+ AER_SIG2        =   2.500000    ,
+ DOFIX_PGAM      = F,
+ PGAM_FIXED      =   5.000000    ,
+ DOUSE_REFFC     = F,
+ DOUSE_REFFI     = F
+ /
+  

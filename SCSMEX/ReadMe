@@ -1,0 +1,196 @@
+TRMM SCSMEX Budget Analysis from 06:00 GMT 5/6/1998 to 12:00 GMT 6/20/1998
+
+Update on 8/23/2005
+
+3 hourly precipitation from TRMM 3b42_v6, averaged over the variational domain 
+from Paul Ciesielski at CSU, has been used in this update of the analysis. 
+Details of the precipitation data can be found at http://tornado.atmos.colostate.edu/scsmexdata. 
+
+===================================
+
+Version 0 6/28/2002
+
+The two fortran programs read the two ascii data files for single-level and
+multi-level fields respectively.  The netcdf file contains all the data.  The 
+files are self-explanatory.
+
+This is a preliminary release. Future revision is anticated as
+better estimates of surface rainfall (e.g., from radar products) and
+latent and sensible heat fluxes become available.
+
+
+ Special thanks to:
+
+ Paul Ciesielski and Dick Johnson at the Colorado State University
+ for their active participation in the project.
+
+
+ This version of the variational budget analysis has used the 
+ following data sources:
+
+ 1. TRMM SCSMEX field campaign soundings and operational soundings
+     quality controlled by the CSU group, with soundings below 700 mb
+     from station Laoag masked as missing as discussed in Johnson and 
+     Ciesielski (2002). 
+
+ 2. Surface latent and sensible heat fluxes from the adjusted JMA analysis 
+    by using the ship measurements from Shiyan as prepared by Paul Ciesielski.
+
+ 3. ISCCP TOA and surface radiative fluxes and cloud information from
+    Bill Rossow's group at GISS
+
+ 4. Surface precipitation from the combined TRMM product (3B42) and the daily 
+   GPCP rainfall supplied by Paul Ciesielski. 
+
+ 5. JMA analysis of upper air fields and other surface meteorological 
+    variables supplied by Paul Ciesielski.
+
+
+ These data sources have been used to obtain the best estimates of 
+ area-averaged variables for the analysis domain.  They are then
+ subjected to the constrained variational analysis of Zhang et al. 
+ (MWR, 2001). 
+
+
+Description of data sources for each variable in the released data:
+ 
+6-hourly time series of single-level fields:
+
+1.	surface precipitation
+
+Daily rainfalls from the TRMM combined product (3B42) and GPCP are both averaged in the 
+budget domain (see web http://atmgcm.msrc.sunysb.edu/trmm/trmmscmx/mainscmx.html)  form 
+two daily time series.   They are then averaged and positive-splined fitted to form the 
+six-hour averages.   
+
+2.	surface latent heat flux
+
+This is from the JMA analysis of latent heat flux adjusted to the ship LH measurements at 
+Shiyan as provided by Paul Ciesielski, and averaged to the budget domain. 
+
+3.	surface sensible heat flux
+
+Same as above
+
+4.	surface pressure
+
+JMA analysis and compared with measurements at DongSha Island.
+
+5.	surface air temperature
+
+Same as above
+
+6.	surface wind speed
+
+Same as above
+
+7. surface u wind
+
+Same as above
+
+8. surface v wind
+
+Same as above
+
+9. surface net downward radiation
+
+Domain averaged ISCCP radiation fluxes.
+
+10. surface upward shortwave radiation
+
+Same as above
+
+11. surface downward shortwave radiation
+
+Same as above
+
+12. surface upward longwave radiation
+
+Same as above
+
+13. surface downward longwave radiation
+
+Same as above
+
+14. TOA upward shortwave radiation
+
+ISCCP averaged
+
+15. TOA downward shortwave radiation
+
+ISCCP averaged
+
+16. TOA upward longwave radiation
+
+ISCCP averaged
+
+17. ISCCP clound amount
+
+18. Time derivative of column precipitable water
+
+From the analyzed sounding data.  Note that vertical integration uses the analyzed surface 
+pressure and the 100 mb as the top pressure of the integration.
+
+19. Column integrated horizontal transport of water vapor
+
+From the variational analysis.  Note that vertical integration uses the analyzed surface 
+pressure and the 100 mb as the top pressure of the integration.
+
+20. Surface evaporation
+
+See surface latent heat flux.  This variable is provided here to check the column moisture 
+budget in the unit of (mm/hour)
+
+21. Time derivative of dry static energy
+
+Same as above
+
+22. Column integrated horizontal transport of dry static energy.  Note that vertical integration 
+uses the analyzed surface pressure and the 100 mb as the top pressure of the integration.
+ 
+Same as above
+
+23. Column integrated radiative heating
+
+Derived from the above surface and TOA radiative fluxes
+
+23. Column integrated latent heating
+
+Derived from surface precipitation.  This variable is provided here to check the column energy 
+budget
+
+6-hourly time-pressure cross sections of multi-level fields:
+
+All analyzed from the constrained variational analysis method of Zhang et al. (MWR 2001).  
+Input data are 23 sounding stations adjacent to the budget domain (see "Domain" on 
+http://atmgcm.msrc.sunysb.edu/trmm/trmmscmx/mainscmx.html). The 
+JMA upper air analysis has been used as a background and initial guess.
+
+1. Temperature
+2. Water vapor mixing ratio 
+3. u wind
+4. v wind
+5. pressure vertical velocity
+Same as above
+6. horizontal wind divergence
+7. horizontal advective tendency of temperature
+8. vertical advective tendency of temperature
+9. horizontal advective tendency of water vapor
+10. vertical advective tendency of water vapor
+11. dry static energy
+12. horizontal advective tendency of dry static energy
+13. vertical advective tendency of dry static energy
+14. time derivative of dry static energy
+15. time derivative of temperature
+16.  time derivative of water vapor
+17. apparent heating rate Q1
+18. apparent moisture sink Q2
+
+For original input data, please visit the CSU webpage at 
+http://tornado.atmos.colostate.edu/scsmexdata/main.html
+ 
+Please report problems to the following email addess:
+
+ mzhang@notes.cc.sunysb.edu
+
+Minghua Zhang

@@ -1,0 +1,26 @@
+peter Blossey notice bug in sending array limits in boundaries:
+  
+diff -r SAM6.11.4/SRC/periodic.f90 SAM6.11.5/SRC/periodic.f90
+93c93
+<                    1+dimx1_d,dimx2_d-nx,YES3D+dimy1_d,1-YES3D+dimy2_d-ny,4+nsgs_fields+i)
+---
+>                    1-dimx1_d,dimx2_d-nx,YES3D*(1-dimy1_d),1-YES3D+dimy2_d-ny,4+nsgs_fields+i)
+diff -r SAM6.11.4/SRC/task_boundaries.f90 SAM6.11.5/SRC/task_boundaries.f90
+106c106
+<                    1+dimx1_d,dimx2_d-nx,YES3D+dimy1_d,1-YES3D+dimy2_d-ny,4+nsgs_fields+i)
+---
+>                    1-dimx1_d,dimx2_d-nx,YES3D*(1-dimy1_d),1-YES3D+dimy2_d-ny,4+nsgs_fields+i)
+
+
+RAD_CAM/rad_full.f90
+
+landmask is the array. Fortunately, there is no island option in this version, so all the elements are 0(OCEAN=.true.)  or 1 (LAND=.true.)
+
+<               call albedo(1,1,landmask,landtype(i,j),coszrs_in(1), &
+---
+>               call albedo(1,1,landmask(i,j),landtype(i,j),coszrs_in(1), &
+
+
+
+
+

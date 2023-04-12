@@ -1,0 +1,19 @@
+
+surface.f90  
+
+Added ug and vg to wind components used in the calls to surface flux routine. Also, the call to surface flux for OCEAN=.true. LES=.true. combination was not correct (also changed in SAM6.11.0).
+
+hbuffer.f90  
+
+diagnostics variables (MODIS simulator) s_acldmmodis and s_acldhmodis were not initialized to zero.
+
+statistics.f90 
+
+cwp (cloud water path) diagnostics for cloud fraction diagnostics was using adzw(k) instead of adz(k) (line 1078).
+
+fft.f90
+pressure_big.f90
+pressure_orig.f90
+pressure_rhs.f90
+
+No bugs, just changed the FFT in fft.f90 to double precision real(8) from just real. Put corresponding changes to pressure_big() and pressure_orig(). Should help to reduce noise in large-domain simulations. in press_rhs(), the right hand side of poisson equation is not multiplied by rho as the coefficients for pressure solver have changed accordingly. the latter is not changing results in any way, just had to do to use the double precision pressure solver from my version of SAM.

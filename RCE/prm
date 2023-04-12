@@ -1,0 +1,75 @@
+&PARAMETERS
+
+caseid ='128x128x64'
+
+nrestart = 0,
+
+dt = 10.,
+dx = 1000.
+dy = 1000.
+
+day0=0.25,
+
+nstop    = 25920,
+nprint   = 60,
+nstat    = 360,
+nstatfrq = 60,
+
+restart_sep = .false.,
+output_sep = .false.,
+!restart_skip = 9,
+
+dofplane = .false.
+docoriolis = .false.,
+
+LES_S = .false.
+
+doseasons = .false.,
+nrad = 90,
+
+OCEAN = .true.,
+tabs_s = 300.,
+
+nxco2 = 1.,
+dosgs           = .true.,
+dodamping       = .true.,
+doupperbound    = .false.,
+docloud         = .true.,
+doprecip        = .true.,
+dolongwave      = .true.,
+doshortwave     = .true.,
+dosurface       = .true.,
+dolargescale    = .false.,
+doradforcing    = .false.,
+dosfcforcing    = .false.,
+donudging_uv    = .false.,
+donudging_tq    = .false.,
+
+tauls = 86400.,
+
+SFC_FLX_FXD    = .false.,
+SFC_TAU_FXD    = .false.,
+
+doisccp = .false.,
+
+doSAMconditionals = .false.
+dosatupdnconditionals = .false.
+
+nsave2D = 360,
+nsave2Dstart    = 0,
+nsave2Dend      = 999999999,
+save2Dsep = .false.
+save2Davg = .true.
+
+nsave3D = 360,
+nsave3Dstart    = 0,
+nsave3Dend      = 999999999,
+save3Dbin      = .false.
+
+nmovie       = 60,
+nmoviestart  = 99999990
+nmovieend    = 99960480
+
+/
+
+

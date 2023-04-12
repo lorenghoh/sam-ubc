@@ -1,0 +1,104 @@
+
+var.f90
+The fcorzy dimensions have been changed to (0:ny) from (ny) to avoid potential array bound conflict when dofplane=.false.
+
+SGS_TKE/tke_full.f90
+- A new version has the SGS parameterization updated. Specifically, the SGS TKE buoyancy production term has been found not taking into account the production of TKE at the first level near the surface by the surface fluxes. The new version corrects that oversight (thanks to Peter Blossey and Chris Bretherton’s student, Ping-Ping) and also implements somewhat better numerics. The overall effect on simulations, both shallow clouds and deep ones, is (fortunately) quite small though, which is obviously good news. Those who don’t want to switch to the new SAM version should, however, update the SGS_TKE/tke_full.f90 with the new version, for consistency. 
+
+
+- Added new case directories: DYNAMO, RICO and TWP-ICE. 
+
+
+Microphysics and radiation changes from Peter Blossey (UW) and Robert Pincus (CU/NOAA)
+
+MICRO_M2005, MICRO_THOM, RAD_RRTM, RAD_CAM:
+
+ - More sophisticated coupling of microphysics and radiation when
+   using MICRO_M2005 or MICRO_THOM with RAD_RRTM.  Cloud microphysical
+   properties from M2005 are translated into cloud optical properties
+   using lookup tables from CAM5/CESM1.  Cloud effective radii for
+   liquid (generalized effective size for cloud ice/snow) from
+   Thompson are translated into cloud optical properties using RRTM's
+   lookup tables.  The old behavior can be regained using the namelist
+   option dorrtm_cloud_optics_from_effrad_legacyoption=.true. with the
+   MICRO_M2005 or MICRO_THOMPSON namelists. 
+
+ - Note that snow is radiatively active for both M2005 and THOM by
+   default.  This can be turned off by setting
+   dosnow_radiatively_active=.false. in the MICRO_M2005 or
+   MICRO_THOMPSON namelists.  The old coupling of microphysics to
+   radiation can be used by specifying  
+
+ - Note that snow will also be radiatively active when using RAD_CAM,
+   though the radiative properties of the clouds will be computed
+   using effective radii from the microphysics (if
+   douse_reff*==.true. as it is by default) in combination with the
+   older CAM3 cloud radiative parameterizations. 
+
+ISCCP, MODIS and MISR 
+
+ - Consistent treatment of cloud properties between radiation and
+   instrument simulators (ISCCP, MODIS and MISR).  These simulators
+   now take cloud properties (optical depth and emissivity) directly
+   from the radiation scheme, so that the assumptions about cloud
+   radiative properties are identical.  Note that this includes
+   radiatively-active snow when appropriate. 
+
+Other changes from Peter Blossey (UW):
+
+MICRO_DRIZZLE:
+
+ - In MICRO_DRIZZLE, the cloud droplet effective radius is now
+   computed (assuming a lognormal size distribution with specified
+   droplet concentration, Nc0, and geometric standard deviation,
+   sigmag).  This effective radius is then used by RAD_CAM or RAD_RRTM
+   if full radiation is used.  The effective radius computation is due
+   to Andy Ackerman and was used in the GASS stratocumulus to trade
+   cumulus transition simulations.  The geometric standard deviation
+   can be set in the MICRO_DRIZZLE namelist and affects both the
+   effective radius and cloud droplet sedimentation rate.
+
+MICRO_M2005:
+
+ - Added option for outputting all individual microphysical process
+   tendencies in the statistics output (horizontal averages over the
+   domain).  Use sparingly as this will increase output size by a lot
+   when doicemicro==.true.
+
+RAD_CAM, RAD_RRTM:
+
+ - Write out clearsky heating rates for longwave and shortwave in the
+   statistics files.  The new variables are RADQRCSW and RADQRCLW.
+
+SRC/stepout.f90:
+
+ - Moved calls of isccp_write(), misr_write() and modis_write() above
+   that of hbuf_average in stepout.f90.  This allows the simulator
+   cloud  fraction to be included in the statistics output at the
+   first output time.  Previously, the initial output of cloud
+   fraction (e.g., MODISTOT) was zero even if the cloud fraction was
+   one. 
+
+MINOR CHANGES:
+
+ - Added an extra namelist variable, nelapsemin.  The run should
+   terminate at the end of nelapsemin minutes of runtime.  Note that
+   the run will only terminate after the writing of statistics (and 2D
+   output if save2Davg==.true.).  This is useful if there is a
+   timelimit on your queue.  This includes modifications of
+   task_abort() and task_stop() within task_util_MPI.f90, so that an
+   exit condition of zero is returned when stopping cleanly.
+
+ - Modified writing of dimensions in write_fields*D.f90, so that they
+   are output in single precision.  When running in double precision,
+   this will make the dimensions of the resulting netcdf files
+   readable. 
+
+ - Cleaned up "use" statements in MICRO_M2005/microphysics.f90 and
+   MICRO_DRIZZLE/microphysics.f90, so that they're mostly up at the
+   top.  This seems to be better form for fortran 90 and later.
+
+NOTE:
+
+ - If you run into trouble with any of these changes, please send mail
+   to Peter Blossey <pblossey@uw.edu>.

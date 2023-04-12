@@ -1,0 +1,33 @@
+
+* Updated visible and near-infrared albedos for all land-types following CLM (Zhou et al 2003, JGR)
+
+SRC/SLM/slm_vars.f90
+
+* Included the effect of moisture on soil albedo;
+
+SRC/SLM/radiative_fluxes.f90
+SRC/RAD_CAM/albedo.f90
+SRC/RAD_CAM/rad_full.f90
+
+* Changed the code to update velocities lateral boundaries (cost points) only once, not twice. The price - the addition of three 3D velocity arrays (u1,v1,w1) to module vars. The biggest impact would be a reduction of MPI communication overhead by about 25% (exchange of lateral information on scalars is still the largest overhead), which may be particularly important for large-domain simulations, especially on computers with relatively inexpensive (slow) communication networks. 
+Files affected:
+
+SRC/adams.f90
+SRC/main.f90
+SRC/task_boundaries.f90
+SRC/periodic.f90
+SRC/ADV_*/advect_scalar*.f90
+File SRC/uvw.f90 has been eliminated.
+
+Don Dazlich implemented the initial-noise generation, which is invariant of the domain decomposition. It is controled by a logical switch within the file itself (no namelist). By default it is set to false (use old way). Be careful with setting it to true though, as a master process temporarily allocates a global array of random numbers which can be too big to get allocated from the heap.
+
+setperturb.f90
+
+*Fixed an issue with miscounting the number of 2D fields for output in the case save2Davg=.false.
+
+writefields2D.f90
+
+Added call to diagnose() after setting initial perturbations in setdata() to update the initial temperature field; otherwise, there is no buoyancy field when NSTEP=1, and hence no initial motion until NSTEP=2.
+
+setdata.f90
+

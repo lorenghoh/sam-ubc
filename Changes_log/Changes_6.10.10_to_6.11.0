@@ -1,0 +1,27 @@
+I put together an updated version of SAM, 6.11.0. Besides a few bug fixes, the new 11th subversion introduces a Simplified Land Model (SLM). The SLM has been described in paper by Lee and Khairoutdinov, JAMES, 2015. The main features of SAM-SLM are
+
+* a choice of 16 preset IGBP land types, including various types of vegetated land, bare soil and icy land;
+* interactive multilayered soil with settable concentration of clay and sand;
+* simple set-up of islands, lakes, heterogeneous surface, etc.
+
+The User Guide in DOC directory has a subsection on SLM with details on how to setup and run SAM with SLM. 
+
+Besides SLM, there have been several bug fixes and also several changes to the code. 
+
+First of all, the radiation call has been moved from the very end to the very beginning of the call tree in main time loop, This is done mostly for SLM coupling. Also, I think applying radiation cooling before buoyancy term and advection makes more sense. My tests comparing SAM6.11.0 with SAM6.10.10 suggest that the move has very small effect on simulations.
+
+Also, the SGS diffusivity and conductivity coefficients are now capped not to violate the CFL criterion, rather than affecting the time step (see SGS/tke_full.f90). Also, kurant.f90 was modified to compute separately horizontal and vertical Courant numbers that are now printed by the stepout.f90. Also, the simple land surface flux subroutine landflx.f90 has been substantially modified.
+
+Those who just want to fix bugs in previous version SAM6.10.10, here they are:
+
+SRC/stat_moments.f90: 
+replace save3Dbin flags in call to compress3D with savemombin. Affects the moments binary output (not compressed com output)  
+
+SRC/RAD_CAM/rad_restart.f90: add radiative snow qs_rad to restart write/read statements. Also, set qrs and qrl to 0 in the beginning of the x-y radiation loop as one of them maybe be undefined in case when only one of doshortwave or dolongwave is set to true, not both.
+
+SRC/ice_fall.f90 : add precipitation statistics and total_water_prec variable to check water budget.
+
+SRC/ADV_MPDATA/advect_scalar2D
+SRC/ADV_MPDATA/advect_scalar3D
+In the across terms of the anti diffusive vertical velocity www, the last factor should be irhow not irho. 
+

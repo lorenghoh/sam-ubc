@@ -1,0 +1,69 @@
+Main change is in pressure solver (pressure_big.f90). It addresses the need to increase number of MPI processes or cores in the case of bowling-alley type of simulations, that is when Nx >> Ny, which became popular lately. Previously, the maximum number of cores could not exceed min (Nx, Ny), which is not, obviously, good for bowling alley simulations as in that case the maximum number of cores would be Ny. 
+
+Affected files:
+pressure.f90
+pressure_big.f90
+
+Note that for, basically, all earlier versions of SAM, you would simply need to replace these two files. However, the change would force somewhat different rules for the choice of number of cores, which are now as follows:
+
+• The maximum number of cores should not exceed nx_gl.
+• nx_gl should be divisible by ny_gl.
+• nz_gl should be divisible by (nx_gl/ny_gl).
+If either of the above conditions is not met or if domain is 2D, then the number of pressure levels nz_gl should be divisible by the total number of processors.
+
+I updated the User Guide accordingly.
+
+For example, previously the following setting in domain.f90 would not work:
+
+       integer, parameter :: YES3D = 1  ! Domain dimensionality: 1 - 3D, 0 - 2D
+       integer, parameter :: nx_gl = 1152 ! Number of grid points in X
+       integer, parameter :: ny_gl = 144 ! Number of grid points in Y
+       integer, parameter :: nz_gl = 64 ! Number of pressure (scalar) levels
+       integer, parameter :: nsubdomains_x  = 48 ! No of subdomains in x
+       integer, parameter :: nsubdomains_y  = 6 ! No of subdomains in y
+
+because the total number of cores would be 288, which exceeds ny_gl=144. Now it will run just fine. Notice that nx_gl is divisible by ny_gl: nx_gl/nx_gl = 8, and nz_gl is also divisible by 8. Obviously, when nx_gl=ny_gl, the rules are the same as before the modification.
+
+When you choose the number of cores for given domain size, be careful as sometimes the speedup may not be that great, far from ideal,  when smaller number of cores is used. So, use timing tests to use computer time effectively. Sometimes using smaller number of cores is slower in terms of wall-clock time, but more efficient in terms of burning the total amount of CPU time, which can be important when running on supercomputer with given total core-time allocation.
+
+
+Another change is that I put explicit Forrtan open-file flags in most file-open statements such as BUFFERED=‘YES’. On many supercomputers it would allow some internal automatic optimization of I/O. I did decrease quite significantly the CPU time when writing 2D/3D output files.
+
+Affected files:
+
+write_fields2D.f90
+write_fields3D.f90
+restart.f90
+SLM/slm_restart.f90
+RAD_CAM/rad_restart.f90
+RAD_RRTM/rad.f90
+
+
+Fix bug in M2005 and THOM microphysics which did not fill the precinst (precipitation at reference level) array needed for SLM
+
+affected files 
+
+MICRO_M2005/microphysics.f90
+MICRO_THOM/microphysics.f90
+
+
+Bug in SLM/
+
+SLM/slm_vars.f90:
+
+The Rc_min for land type 14 was not defined, which could affect significantly the evapotranspiration flux for that land type. Just add
+
+Rc_min(i,j) = 100.
+
+around line 682 to definitions of land type 14.
+
+SLM/vapor_fluxes.f90:
+
+Around line 67, the precision indicator DBL accidentally was used in the formula itself as a value:
+
+line 67:
+r_soil = min(10000._DBL,max(50._DBL,r_d*(1.0_DBL/soil_diff-1.0+DBL)))
+
+Instead it should read:
+
+r_soil = min(10000._DBL,max(50._DBL,r_d*(1.0_DBL/soil_diff-1.0_DBL)))

@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 41
+/repo/cmmap/!svn/ver/265/SAM6.10.3/TWPICE
+END
+grd.800m
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/repo/cmmap/!svn/ver/228/SAM6.10.3/TWPICE/grd.800m
+END
+prm.800m
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/repo/cmmap/!svn/ver/265/SAM6.10.3/TWPICE/prm.800m
+END
+lsf
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/repo/cmmap/!svn/ver/240/SAM6.10.3/TWPICE/lsf
+END
+snd
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/repo/cmmap/!svn/ver/236/SAM6.10.3/TWPICE/snd
+END
+grd.gigaLES
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/repo/cmmap/!svn/ver/228/SAM6.10.3/TWPICE/grd.gigaLES
+END
+prm.gigaLES
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/repo/cmmap/!svn/ver/265/SAM6.10.3/TWPICE/prm.gigaLES
+END
+sfc
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/repo/cmmap/!svn/ver/228/SAM6.10.3/TWPICE/sfc
+END
+grd
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/repo/cmmap/!svn/ver/228/SAM6.10.3/TWPICE/grd
+END
+lsf_hor
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/repo/cmmap/!svn/ver/240/SAM6.10.3/TWPICE/lsf_hor
+END
+prm
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/repo/cmmap/!svn/ver/228/SAM6.10.3/TWPICE/prm
+END
