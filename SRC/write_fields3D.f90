@@ -319,7 +319,7 @@ end do
   if(masterproc) then
     close (46)
     if(RUN3D.or.save3Dsep) then
-       if(dogzip3D) call system('gzip -f '//filename)
+       if(dogzip3D) call execute_command_line('gzip -f '//filename)
        print*, 'Writting 3D data. file:'//filename
     else
        print*, 'Appending 3D data. file:'//filename

@@ -874,7 +874,7 @@ if(nfields.ne.nfields1) then
 end if
 if(masterproc) then
     if(RUN3D.or.savemomsep) then
-       if(dogzip3D) call system('gzip -f '//filename)
+       if(dogzip3D) call execute_command_line('gzip -f '//filename)
        print*, 'Writting statistical-moments data. file:'//filename
     else
        print*, 'Appending statistical-moments data. file:'//filename

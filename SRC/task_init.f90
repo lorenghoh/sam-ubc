@@ -34,7 +34,7 @@ else
 
   dompi = .true.
 
-!  call system('hostname')
+!  call execute_command_line('hostname')
 
   if(ntasks.ne.nsubdomains) then
     if(rank.eq.0) print *,'number of processors is not equal to nsubdomains!',&

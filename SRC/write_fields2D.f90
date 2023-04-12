@@ -605,7 +605,7 @@ end if
 
 if(masterproc.or.output_sep) then
      close(46)
-     if(save2Dsep.and.dogzip2D) call system('gzip -f '//filename)
+     if(save2Dsep.and.dogzip2D) call execute_command_line('gzip -f '//filename)
      if(masterproc)print*, 'Writting 2D data. file:'//filename
 endif
 
