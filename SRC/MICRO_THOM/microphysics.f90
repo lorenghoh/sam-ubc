@@ -20,10 +20,10 @@ use vars, only: rho, w, t, tabs, qv, qcl, qci, qpl, qpi, &
      tlatqi, tabs0, qv0, fluxbq, fluxtq, dtfactor, &
      sstxy, t00, rhow, &
      condavg_mask, ncondavg, condavgname, condavglongname, &
-     nstep,nprint, nstatis, icycle, total_water_prec, precinst, &&
+     nstep,nprint, nstatis, icycle, total_water_prec, precinst, &
      nrainy, ncmn, nrmn
 
-use hbuffer, only: hbuf_put     
+use hbuffer, only: hbuf_put
 
 use micro_params
 
