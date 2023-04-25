@@ -168,7 +168,7 @@ subroutine micro_setparm()
 
    ! write namelist values out to file for documentation
    if(masterproc) then
-      open(unit=55,file='./OUT_STAT'//trim(case)//'_'//trim(caseid)//'.nml', form='formatted', position='append')    
+      open(unit=55,file='./OUT_STAT/'//trim(case)//'_'//trim(caseid)//'.nml', form='formatted', position='append')    
       write (unit=55,nml=MICRO_M2005,IOSTAT=ios)
       write(55,*) ' '
       close(unit=55)
@@ -1504,7 +1504,7 @@ subroutine satadj_liquid(nzm,tabs,qt,qc,pres)
     qsat1 = 0.622*esat1/ (pres(k) - esat1)
     qc(k) = 0. ! no cloud unless qt > qsat
     
-    if (qt(k).gt.qsat1) then
+    if ((qt(k).gt.qsat1) .AND. (qsat1.gt.0.)) then
 
       ! if unsaturated, nothing to do (i.e., qv=qt, T=Tl) --> just exit.
       ! if saturated, do saturation adjustment 
