@@ -1,0 +1,94 @@
+&MICRO_M2005
+dopredictNc  = .true.
+/
+&SGS_TKE
+dosmagor = .true.
+/
+
+&PARAMETERS
+
+caseid ='CGILS_ent_25m_1s_ent',
+
+nrestart = 0,
+nrestart_skip=59,
+restart_sep = .true.,
+
+perturb_type = 5, 
+
+OCEAN = .true.,
+
+dosgs               = .true.,
+dodamping           = .true.,
+doupperbound        = .true.,
+docloud             = .true.,
+doprecip            = .true., 
+dosurface           = .true.,
+dolargescale        = .true.,
+dosfcforcing        = .false.,
+dodynamicocean      = .false.,
+docoriolis          = .false.,
+donudging_uv        = .false.,
+donudging_tq        = .false.,
+
+! Entrainment
+doentrainment       = .true.,
+dotracers	        = .true.,
+
+! Radiation
+nrad                = 60,
+doradforcing        = .false.,
+dolongwave          = .false.,
+doshortwave         = .false.,
+doperpetual         = .true.,
+doseasons           = .false.,
+dosolarconstant     = .true.,
+solar_constant      = 447.9211,
+zenith_angle        = 51.0198,
+
+SFC_FLX_FXD         = .false.,
+SFC_TAU_FXD         = .false.,
+
+! SCAM IOP settings
+doscamiopdata       = .true.,
+iopfile             = 'S6_CTL_Dec2010.nc',
+
+tabs_s = 301.,
+
+dx = 25.,
+dy = 25.,
+
+dt = 1.,
+
+doseasons = .false.,
+
+day0 = 196.,
+
+doSAMconditionals = .true.
+dosatupdnconditionals = .true.
+
+nstop           = 43200,
+nprint          = 60,
+nstat           = 60,
+nstatfrq        = 60,
+
+nsave2D         = 100,
+nsave2Dstart    = 9936000,
+nsave2Dend      = 999164000,
+save2Dbin       = .false.,
+
+nsave3D         = 60,
+nsave3Dstart    = 21600,
+nsave3Dend      = 999999999,
+save3Dbin       = .true.,
+
+nent3D          = 60,
+nent3Dstart     = 999999999,
+nent3Dend       = 999999999,
+ent3Dbin        = .true.,
+
+nstatmom        = 100,
+nstatmomstart   = 9936000,
+nstatmomend     = 99960480,
+savemombin      = .false.,
+
+/ 
