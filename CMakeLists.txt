@@ -1,5 +1,5 @@
-project(sam_cmake)
 cmake_minimum_required(VERSION 3.6)
+project(sam_cmake)
 
 # Edit: Link external libraries necessary
 set(nc_dir "/usr/local/netcdf/4.6.1_intel18")
@@ -7,7 +7,6 @@ set(ncf_dir "/usr/local/netcdf/4.6.1_intel18")
 set(mpi_dir "/usr/local/mpi/intel18/openmpi-2.0.2")
 
 enable_language(Fortran)
-enable_language(C)
 
 INCLUDE_DIRECTORIES(${CMAKE_Fortran_MODULE_DIRECTORY} ${nc_dir}/include ${ncf_dir}/include ${mpi_dir}/include ${CMAKE_SOURCE_DIR}/SRC/TIMING)
 
@@ -18,20 +17,14 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 set(FFLAGS "-O2 -fPIC -r8")
 set(CMAKE_Fortran_FLAGS "-free -extend-source 132 ${FFLAGS}")
 set(CMAKE_F77_FLAGS "-fixed ${FFLAGS}")
-set(CMAKE_C_FLAGS "-O2 -DLINUX")
 
 set(CMAKE_Fortran_MODULE_DIRECTORY  ${PROJECT_BINARY_DIR}/include_fortran)
 
 set(LIBRARY_OUTPUT_PATH  ${PROJECT_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR/bin})
 
-FILE(GLOB c_src "SRC/TIMING/*.c")
-list(APPEND c_src SRC/cstuff.c)
-set_source_files_properties(${c_src} PROPERTIES COMPILE_FLAGS "${CMAKE_C_FLAGS}")
-add_library(c_src STATIC ${c_src})
-
 # Strictly necessary files
-FILE(GLOB adv_src "SRC/ADV_UM5/*.f90")
+FILE(GLOB adv_src "SRC/ADV_MPDATA/*.f90")
 list(FILTER adv_src EXCLUDE REGEX ".*/[._#].*.f90")
 set(
 	first_pass_list
@@ -39,6 +32,7 @@ set(
 		SRC/grid.f90
 		SRC/params.f90
 		SRC/vars.f90
+		SRC/sat.f90
 		SRC/tracers.f90
 		SRC/hbuffer.f90
 		SRC/stat_sw2.f90
@@ -46,11 +40,26 @@ set(
 )
 add_library(first_pass STATIC ${first_pass_list} ${adv_src})
 
+# Main SAM source files
+FILE(GLOB f90_src "SRC/*.f90")
+FILE(GLOB f77_src "SRC/*.f")
+set_source_files_properties(${f77_src} COMPILE_FLAGS "${CMAKE_F77_FLAGS}")
+LIST(REMOVE_ITEM f90_src ${first_pass_list} "SRC/main.f90")
+add_library(sam_src STATIC ${f90_src} ${f77_src})
+
 # Dynamic model components
 # Microphysics
-FILE(GLOB micro_src "SRC/MICRO_SAM1MOM/*.f90")
-list(APPEND micro_src "SRC/cstuff.c")
-list(APPEND micro_src "SRC/precip_fall.f90")
+
+## SAM 1-moment microphysics scheme
+# FILE(GLOB micro_src "SRC/MICRO_SAM1MOM/*.f90")
+# list(APPEND micro_src "SRC/precip_fall.f90")
+
+## Morrison's 2-moment microphysics scheme
+# FILE(GLOB micro_src "SRC/MICRO_M2005/*.f90")
+
+## Thomson microphysics scheme
+FILE(GLOB micro_src "SRC/MICRO_THOM/*.f90")
+list(FILTER micro_src EXCLUDE REGEX ".*/[._#].*.f90")
 
 # Radiation
 FILE(GLOB rad_src "SRC/RAD_CAM/*.f90")
@@ -80,17 +89,10 @@ FILE(GLOB sim_f90 "SRC/SIMULATORS/*.f90")
 FILE(GLOB sim_f77 "SRC/SIMULATORS/*.f")
 set_source_files_properties(${sim_f77} PROPERTIES COMPILE_FLAGS "${CMAKE_F77_FLAGS}")
 add_library(sim_src STATIC ${sim_f90} ${sim_f77})
-message("Simulators consists of ${sim_src}")
+message("Simulators consists of ${sim_f90} ${sim_f77}")
 
-# Main SAM source files
-FILE(GLOB f90_src "SRC/*.f90")
-FILE(GLOB f77_src "SRC/*.f")
-set_source_files_properties(${f77_src} COMPILE_FLAGS "${CMAKE_F77_FLAGS}")
-LIST(REMOVE_ITEM f90_src ${first_pass_list} "SRC/main.f90")
-add_library(sam_src STATIC ${f90_src} ${f77_files})
-
-add_dependencies(sam_src first_pass dyn_src)
 add_dependencies(dyn_src first_pass)
+add_dependencies(sam_src first_pass dyn_src sim_src)
 add_dependencies(sim_src first_pass dyn_src)
 
 add_executable(SAM_CMAKE "SRC/main.f90")
@@ -101,7 +103,6 @@ find_library(netcdff_lib NAMES netcdff PATHS ${ncf_dir}/lib NO_DEFAULT_PATH)
 
 target_link_libraries(
 	SAM_CMAKE
-		c_src
 		sam_src
 		sim_src
 		dyn_src
