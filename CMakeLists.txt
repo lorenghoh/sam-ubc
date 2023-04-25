@@ -48,21 +48,21 @@ LIST(REMOVE_ITEM f90_src ${first_pass_list} "SRC/main.f90")
 add_library(sam_src STATIC ${f90_src} ${f77_src})
 
 # Dynamic model components
-# Microphysics
+# Microphysics (uncomment as necessary)
 
 ## SAM 1-moment microphysics scheme
 # FILE(GLOB micro_src "SRC/MICRO_SAM1MOM/*.f90")
-# list(APPEND micro_src "SRC/precip_fall.f90")
 
 ## Morrison's 2-moment microphysics scheme
 # FILE(GLOB micro_src "SRC/MICRO_M2005/*.f90")
 
 ## Thomson microphysics scheme
 FILE(GLOB micro_src "SRC/MICRO_THOM/*.f90")
+
 list(FILTER micro_src EXCLUDE REGEX ".*/[._#].*.f90")
 
 # Radiation
-FILE(GLOB rad_src "SRC/RAD_CAM/*.f90")
+FILE(GLOB rad_src "SRC/RAD_RRTM/*.f90")
 list(FILTER rad_src EXCLUDE REGEX ".*/[._#].*.f90")
 
 # Entrainment
