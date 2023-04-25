@@ -8,6 +8,11 @@ use microphysics
 use sgs
 use tracers
 use movies, only: init_movies
+
+! UBC ENT
+use entrainment
+! End UBC ENT
+
 implicit none
 
 integer k, icyc, nn, nstatsteps
@@ -68,6 +73,13 @@ call init_movies()
 call stat_2Dinit(1) ! argument of 1 means storage terms in stats are reset
 call tracers_init() ! initialize tracers
 call setforcing()
+
+! UBC ENT
+if (doentrainment) then
+     call init_entrainment()
+end if
+! End UBC ENT
+
 if(masterproc) call printout()
 !------------------------------------------------------------------
 !  Initialize statistics buffer:
@@ -190,13 +202,26 @@ do while(nstep.lt.nstop.and.nelapse.gt.0)
 !     Fill boundaries for SGS diagnostic fields:
 
      call boundaries(4)
+
 !-----------------------------------------------
 !       advection of momentum:
 
      call advect_mom()
 
+     ! UBC ENT
+     if(doentrainment) then
+          call calculate_advective_momentum_fluxes()
+     end if 
+     ! End UBC ENT
+
 !----------------------------------------------------------
 !	SGS effects on momentum:
+
+     ! UBC ENT
+     if (doentrainment) then
+          if (dosgs) call calculate_diffusive_momentum_fluxes()
+     end if
+     ! End UBC ENT
 
      if(dosgs) call sgs_mom()
 
@@ -257,6 +282,12 @@ do while(nstep.lt.nstop.and.nelapse.gt.0)
 !    Compute diagnostic fields:
 
       call diagnose()
+
+     ! UBC ENT
+     if (doentrainment) then
+          call calculate_entrainment_rates()
+     end if
+     ! End UBC  ENT
 
 !----------------------------------------------------------
 

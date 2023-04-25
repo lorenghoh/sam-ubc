@@ -105,6 +105,17 @@ if(mod(nstep,nsave3D).eq.0.and.nstep.ge.nsave3Dstart.and.nstep.le.nsave3Dend ) t
 endif
 call t_stopf ('3D_out')
 
+! UBC ENT
+if (doentrainment) then
+  if ((mod(nstep, nent3D) .eq. 0) &
+    .and. (nstep .ge. nent3Dstart) &
+    .and. (nstep .le. nent3Dend)) then
+    call write_cloud_entrainment_3D()
+    call write_core_entrainment_3D()
+  endif
+endif  
+! End UBC ENT
+
 !------------------------------------------------------------------------------
 !------------------------------------------------------------------------------
 ! Print stuff out:

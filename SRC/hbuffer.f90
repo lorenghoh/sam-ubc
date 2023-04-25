@@ -223,6 +223,11 @@ hbuf_length = hbuf_length+trcount
 trcount=0
 if(dosgs) call hbuf_sgs_init(namelist,deflist,unitlist,status,average_type,count,trcount)
 hbuf_length = hbuf_length+trcount
+! UBC ENT
+trcount=0
+if(doentrainment) call hbuf_ent_init(namelist,deflist,unitlist,status,average_type,count,trcount)
+hbuf_length = hbuf_length+trcount
+! End UBC ENT
 
 ! check if there are dublicate entries in the stat list:
 duplicate_entries = .false.

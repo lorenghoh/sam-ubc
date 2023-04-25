@@ -7,6 +7,11 @@ use params
 use microphysics, only: nmicro_fields, micro_field, flag_number, &
      flag_micro3Dout, mkname, mklongname, mkunits, mkoutputscale, &
      index_water_vapor, GET_reffc, Get_reffi
+
+! UBC ENT
+use tracers
+! End UBC ENT
+
 implicit none
 character *120 filename
 character *80 long_name
@@ -33,6 +38,9 @@ if(compute_reffi.and.(dolongwave.or.doshortwave).and.rad3Dout) nfields=nfields+1
 
 nfields1=0
 
+! UBC ENT
+if (dotracers) nfields = nfields + ntracers
+! End UBC ENT
 
 if(masterproc.or.output_sep) then
 
@@ -309,6 +317,20 @@ do n = 1,nmicro_fields
            save3Dbin,dompi,rank,nsubdomains)
    end if
 end do
+
+! UBC ENT
+if(dotracers) then
+  do n=1,ntracers
+    nfields1=nfields1+1
+    tmp = tracer(1:nx, 1:ny, 1:nzm, n)
+    name=trim(tracername(n))
+    long_name=trim(tracername(n))
+    units='Tr'
+    call compress3D(tmp,nx,ny,nzm,name,long_name,units, &
+                               save3Dbin,dompi,rank,nsubdomains)
+  end do
+end if
+! End UBC ENT
 
   call task_barrier()
 

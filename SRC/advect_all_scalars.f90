@@ -2,6 +2,7 @@ subroutine advect_all_scalars()
 
   use vars
   use microphysics
+  use entrainment
   use sgs
   use tracers
   use params, only: dotracers
@@ -13,8 +14,14 @@ subroutine advect_all_scalars()
 !---------------------------------------------------------
 !      advection of scalars :
 
+    ! UBC ENT
+    if (doentrainment) then
+      call entrainment_advective_fluxes()
+    end if
+    ! End UBC ENT
+
      call advect_scalar(t,tadv,twle,t2leadv,t2legrad,twleadv,.true.)
-    
+
 !
 !    Advection of microphysics prognostics:
 !
@@ -53,6 +60,13 @@ subroutine advect_all_scalars()
 
 
     end if
+
+    ! UBC ENT
+    if (doentrainment) then
+      call entrainment_diffusive_fluxes()
+      call calculate_entrainment_fluxes()
+    end if
+    ! End UBC ENT
 
  ! advection of tracers:
 

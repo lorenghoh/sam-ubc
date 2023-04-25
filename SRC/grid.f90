@@ -147,6 +147,14 @@ real   :: qnsave3D =0.    !threshold manimum cloud water(kg/kg) to save 3D field
 logical:: dogzip3D =.false.    ! gzip compress a 3D output file   
 logical:: rad3Dout = .false. ! output additional 3D radiation foelds (like reff)
 
+! UBC ENT
+logical :: ent3Dbin = .false.
+logical :: ent3Dsep = .false.
+integer :: nent3D = 60
+integer :: nent3Dstart = 99999999
+integer :: nent3Dend = 99999999
+! End UBC ENT
+
 integer:: nsave2D =1000     ! frequency of writting 2D fields (steps)
 integer:: nsave2Dstart =99999999! timestep to start writting 2D fields
 integer:: nsave2Dend =99999999  ! timestep to end writting 2D fields

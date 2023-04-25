@@ -67,6 +67,10 @@ CONTAINS
 
 ! Set surface and top fluxes of tracers. Default is 0 set in setdata.f90
 
+  ! UBC ENT
+  fluxbtr(:, :, 1) = 1.
+  ! End UBC ENT 
+
  end subroutine tracers_flux
 
 
@@ -76,7 +80,11 @@ CONTAINS
  ! add here a call to a subroutine that does something to tracers besides advection and diffusion.
  ! The transport is done automatically. 
 
-  trphys = 0. ! Default tendency due to physics. You code should compute this to output statistics.
+   trphys = 0. ! Default tendency due to physics. You code should compute this to output statistics.
+
+   ! UBC ENT
+   tracer(:, :, :, 1) = tracer(:, :, :, 1) - tracer(:, :, :, 1)/15./60.*dtn
+   ! End UBC ENT 
 
  end subroutine tracers_physics
 

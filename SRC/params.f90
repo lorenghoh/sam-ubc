@@ -114,6 +114,9 @@ logical:: dotracers = .false.
 logical:: dosmoke = .false. 
 logical:: notracegases = .false.
 logical:: doseawater = .false.
+! UBC ENT
+logical:: doentrainment = .false.
+! END UBC ENT
 
 ! Specify solar constant and zenith angle for perpetual insolation.
 ! Based onn Tompkins and Graig (1998)

@@ -7,6 +7,11 @@ use tracers
 use params
 use hbuffer
 use instrument_diagnostics, only: compute_instr_diags
+
+! UBC ENT
+use entrainment
+! End UBC ENT
+
 implicit none	
 	
 	real mse(nzm)
@@ -85,7 +90,7 @@ implicit none
 
 	integer topind(nx,ny),z_inv_ind(nx,ny),z_base_ind(nx,ny),z_top_ind(nx,ny),ncloud	
         real zzz,grad_max(nx,ny),grad
-        real, external :: qsatw,qsati
+        ! real, external :: qsatw,qsati
 !========================================================================
 ! UW ADDITIONS
 
@@ -116,6 +121,30 @@ real, dimension(nzm) :: rhowcl, rhowmsecl, rhowtlcl, rhowqtcl,  &
 ! END UW ADDITIONS
 !========================================================================
 
+! UBC ENT
+real, dimension(nzm) :: entrain_tetra_cloud, detrain_tetra_cloud
+real, dimension(nzm) :: entrain_q_tetra_cloud, detrain_q_tetra_cloud
+real, dimension(nzm) :: entrain_t_tetra_cloud, detrain_t_tetra_cloud
+real, dimension(nzm) :: entrain_w_tetra_cloud, detrain_w_tetra_cloud
+real, dimension(nzm) :: volume_tetra_cloud, mf_tetra_cloud
+
+real, dimension(nzm) :: entrain_romps_cloud, detrain_romps_cloud
+real, dimension(nzm) :: entrain_q_romps_cloud, detrain_q_romps_cloud
+real, dimension(nzm) :: entrain_t_romps_cloud, detrain_t_romps_cloud
+real, dimension(nzm) :: entrain_w_romps_cloud, detrain_w_romps_cloud
+
+real, dimension(nzm) :: entrain_tetra_core, detrain_tetra_core
+real, dimension(nzm) :: entrain_q_tetra_core, detrain_q_tetra_core
+real, dimension(nzm) :: entrain_t_tetra_core, detrain_t_tetra_core
+real, dimension(nzm) :: entrain_w_tetra_core, detrain_w_tetra_core
+real, dimension(nzm) :: volume_tetra_core, mf_tetra_core
+
+real, dimension(nzm) :: entrain_romps_core, detrain_romps_core
+real, dimension(nzm) :: entrain_q_romps_core, detrain_q_romps_core
+real, dimension(nzm) :: entrain_t_romps_core, detrain_t_romps_core
+real, dimension(nzm) :: entrain_w_romps_core, detrain_w_romps_core
+! End UBC ENT
+
         call t_startf('statistics')
 
 	factor_xy = 1./float(nx*ny)
@@ -136,7 +165,49 @@ real, dimension(nzm) :: rhowcl, rhowmsecl, rhowtlcl, rhowqtcl,  &
 !-----------------------------------------------
 !	Mean thermodynamics profiles:
 !-----------------------------------------------	
-		
+
+	! UBC ENT
+	if (doentrainment) then
+		entrain_tetra_cloud = 0.
+		detrain_tetra_cloud = 0.
+		entrain_q_tetra_cloud = 0.
+		detrain_q_tetra_cloud = 0.
+		entrain_t_tetra_cloud = 0.
+		detrain_t_tetra_cloud = 0.
+		entrain_w_tetra_cloud = 0.
+		detrain_w_tetra_cloud = 0.
+		volume_tetra_cloud = 0.
+		mf_tetra_cloud = 0.
+		entrain_romps_cloud = 0.
+		detrain_romps_cloud = 0.
+		entrain_q_romps_cloud = 0.
+		detrain_q_romps_cloud = 0.
+		entrain_t_romps_cloud = 0.
+		detrain_t_romps_cloud = 0.
+		entrain_w_romps_cloud = 0.
+		detrain_w_romps_cloud = 0.
+
+		entrain_tetra_core = 0.
+		detrain_tetra_core = 0.
+		entrain_q_tetra_core = 0.
+		detrain_q_tetra_core = 0.
+		entrain_t_tetra_core = 0.
+		detrain_t_tetra_core = 0.
+		entrain_w_tetra_core = 0.
+		detrain_w_tetra_core = 0.
+		volume_tetra_core = 0.
+		mf_tetra_core = 0.
+		entrain_romps_core = 0.
+		detrain_romps_core = 0.
+		entrain_q_romps_core = 0.
+		detrain_q_romps_core = 0.
+		entrain_t_romps_core = 0.
+		detrain_t_romps_core = 0.
+		entrain_w_romps_core = 0.
+		detrain_w_romps_core = 0.
+	end if
+	! End UBC ENT
+
 	do k=1,nzm
 	 dse(k)=0.
 	 mse(k)=0.
@@ -156,6 +227,7 @@ real, dimension(nzm) :: rhowcl, rhowmsecl, rhowtlcl, rhowqtcl,  &
 	 prof2(k)=0.
 	 prof3(k)=0.
 	 zero(k)=0.
+
 	 do j=1,ny
 	  do i=1,nx
 	   qcc=qcl(i,j,k)
@@ -181,10 +253,56 @@ real, dimension(nzm) :: rhowcl, rhowmsecl, rhowtlcl, rhowqtcl,  &
 	   sse(k)=sse(k)+tabs(i,j,k)+gamaz(k)+fac_cond*qsatw(tabs(i,j,k),pres(k))
 	   qsatwz(k) = qsatwz(k)+qsatw(tabs(i,j,k),pres(k))
 	   relhz(k)=relhz(k)+qv(i,j,k)/qsatw(tabs(i,j,k),pres(k))
+
+		! UBC ENT
+		if (doentrainment) then
+			entrain_tetra_cloud(k) = entrain_tetra_cloud(k) + E_tetra_cloud(i, j, k, 1)
+			detrain_tetra_cloud(k) = detrain_tetra_cloud(k) + D_tetra_cloud(i, j, k, 1)
+			entrain_q_tetra_cloud(k) = entrain_q_tetra_cloud(k) + E_tetra_cloud(i, j, k, 2)
+			detrain_q_tetra_cloud(k) = detrain_q_tetra_cloud(k) + D_tetra_cloud(i, j, k, 2)
+			entrain_t_tetra_cloud(k) = entrain_t_tetra_cloud(k) + E_tetra_cloud(i, j, k, 3)
+			detrain_t_tetra_cloud(k) = detrain_t_tetra_cloud(k) + D_tetra_cloud(i, j, k, 3)
+			entrain_w_tetra_cloud(k) = entrain_w_tetra_cloud(k) + E_tetra_cloud(i, j, k, 4)
+			detrain_w_tetra_cloud(k) = detrain_w_tetra_cloud(k) + D_tetra_cloud(i, j, k ,4)
+			volume_tetra_cloud(k) = volume_tetra_cloud(k) + volume_cloud(i, j, k)
+			mf_tetra_cloud(k) = mf_tetra_cloud(k) &
+				+ 0.5*(w_adv_fluxes(i, j, k+1, 1)*w_area_cloud_frac(i, j, k+1) &
+					+ w_adv_fluxes(i, j, k  , 1)*w_area_cloud_frac(i, j, k  ))
+			entrain_romps_cloud(k) = entrain_romps_cloud(k) + E_romps_cloud(i, j, k, 1)
+			detrain_romps_cloud(k) = detrain_romps_cloud(k) + D_romps_cloud(i, j, k, 1)
+			entrain_q_romps_cloud(k) = entrain_q_romps_cloud(k) + E_romps_cloud(i, j, k, 2)
+			detrain_q_romps_cloud(k) = detrain_q_romps_cloud(k) + D_romps_cloud(i, j, k, 2)
+			entrain_t_romps_cloud(k) = entrain_t_romps_cloud(k) + E_romps_cloud(i, j, k, 3)
+			detrain_t_romps_cloud(k) = detrain_t_romps_cloud(k) + D_romps_cloud(i, j, k, 3)
+			entrain_w_romps_cloud(k) = entrain_w_romps_cloud(k) + E_romps_cloud(i, j, k, 4)
+			detrain_w_romps_cloud(k) = detrain_w_romps_cloud(k) + D_romps_cloud(i, j, k ,4)
+
+			entrain_tetra_core(k) = entrain_tetra_core(k) + E_tetra_core(i, j, k, 1)
+			detrain_tetra_core(k) = detrain_tetra_core(k) + D_tetra_core(i, j, k, 1)
+			entrain_q_tetra_core(k) = entrain_q_tetra_core(k) + E_tetra_core(i, j, k, 2)
+			detrain_q_tetra_core(k) = detrain_q_tetra_core(k) + D_tetra_core(i, j, k, 2)
+			entrain_t_tetra_core(k) = entrain_t_tetra_core(k) + E_tetra_core(i, j, k, 3)
+			detrain_t_tetra_core(k) = detrain_t_tetra_core(k) + D_tetra_core(i, j, k, 3)
+			entrain_w_tetra_core(k) = entrain_w_tetra_core(k) + E_tetra_core(i, j, k, 4)
+			detrain_w_tetra_core(k) = detrain_w_tetra_core(k) + D_tetra_core(i, j, k, 4)
+			volume_tetra_core(k) = volume_tetra_core(k) + volume_core(i, j, k)
+			mf_tetra_core(k) = mf_tetra_core(k) &
+				+ 0.5*(w_adv_fluxes(i, j, k+1, 1)*w_area_core_frac(i, j, k+1) &
+					+ w_adv_fluxes(i, j, k  , 1)*w_area_core_frac(i, j, k  ))
+			entrain_romps_core(k) = entrain_romps_core(k) + E_romps_core(i, j, k, 1)
+			detrain_romps_core(k) = detrain_romps_core(k) + D_romps_core(i, j, k, 1)
+			entrain_q_romps_core(k) = entrain_q_romps_core(k) + E_romps_core(i, j, k, 2)
+			detrain_q_romps_core(k) = detrain_q_romps_core(k) + D_romps_core(i, j, k, 2)
+			entrain_t_romps_core(k) = entrain_t_romps_core(k) + E_romps_core(i, j, k, 3)
+			detrain_t_romps_core(k) = detrain_t_romps_core(k) + D_romps_core(i, j, k, 3)
+			entrain_w_romps_core(k) = entrain_w_romps_core(k) + E_romps_core(i, j, k, 4)
+			detrain_w_romps_core(k) = detrain_w_romps_core(k) + D_romps_core(i, j, k, 4)
+		endif
+		! End UBC ENT
+
 	  end do
 	 end do
-	end do	
-	
+	end do
 
 	call hbuf_avg_put('TL',t,dimx1_s,dimx2_s,dimy1_s,dimy2_s,nzm,1.)
 	call hbuf_avg_put('TABS',tabs,1,nx, 1,ny, nzm,1.)
@@ -219,6 +337,48 @@ real, dimension(nzm) :: rhowcl, rhowmsecl, rhowtlcl, rhowqtcl,  &
 	call hbuf_put('QCOND',prof3,1.e3*factor_xy)
 	call hbuf_put('QSAT',qsatwz,1.e3*factor_xy)
 	call hbuf_put('RELH',relhz,100.*factor_xy)
+
+	! UBC ENT
+	if (doentrainment) then
+		call hbuf_put('ETETCLD', entrain_tetra_cloud, factor_xy)
+		call hbuf_put('DTETCLD', detrain_tetra_cloud, factor_xy)
+		call hbuf_put('EQTETCLD', entrain_q_tetra_cloud, factor_xy)
+		call hbuf_put('DQTETCLD', detrain_q_tetra_cloud, factor_xy)
+		call hbuf_put('ETTETCLD', entrain_t_tetra_cloud, factor_xy)
+		call hbuf_put('DTTETCLD', detrain_t_tetra_cloud, factor_xy)
+		call hbuf_put('EWTETCLD', entrain_w_tetra_cloud, factor_xy)
+		call hbuf_put('DWTETCLD', detrain_w_tetra_cloud, factor_xy)
+		call hbuf_put('VTETCLD', volume_tetra_cloud, factor_xy)
+		call hbuf_put('MFTETCLD', mf_tetra_cloud, factor_xy)
+		call hbuf_put('EROMCLD', entrain_romps_cloud, factor_xy)
+		call hbuf_put('DROMCLD', detrain_romps_cloud, factor_xy)
+		call hbuf_put('EQROMCLD', entrain_q_romps_cloud, factor_xy)
+		call hbuf_put('DQROMCLD', detrain_q_romps_cloud, factor_xy)
+		call hbuf_put('ETROMCLD', entrain_t_romps_cloud, factor_xy)
+		call hbuf_put('DTROMCLD', detrain_t_romps_cloud, factor_xy)
+		call hbuf_put('EWROMCLD', entrain_w_romps_cloud, factor_xy)
+		call hbuf_put('DWROMCLD', detrain_w_romps_cloud, factor_xy)
+
+		call hbuf_put('ETETCOR', entrain_tetra_core, factor_xy)
+		call hbuf_put('DTETCOR', detrain_tetra_core, factor_xy)
+		call hbuf_put('EQTETCOR', entrain_q_tetra_core, factor_xy)
+		call hbuf_put('DQTETCOR', detrain_q_tetra_core, factor_xy)
+		call hbuf_put('ETTETCOR', entrain_t_tetra_core, factor_xy)
+		call hbuf_put('DTTETCOR', detrain_t_tetra_core, factor_xy)
+		call hbuf_put('EWTETCOR', entrain_w_tetra_core, factor_xy)
+		call hbuf_put('DWTETCOR', detrain_w_tetra_core, factor_xy)
+		call hbuf_put('VTETCOR', volume_tetra_core, factor_xy)
+		call hbuf_put('MFTETCOR', mf_tetra_core, factor_xy)
+		call hbuf_put('EROMCOR', entrain_romps_core, factor_xy)
+		call hbuf_put('DROMCOR', detrain_romps_core, factor_xy)
+		call hbuf_put('EQROMCOR', entrain_q_romps_core, factor_xy)
+		call hbuf_put('DQROMCOR', detrain_q_romps_core, factor_xy)
+		call hbuf_put('ETROMCOR', entrain_t_romps_core, factor_xy)
+		call hbuf_put('DTROMCOR', detrain_t_romps_core, factor_xy)
+		call hbuf_put('EWROMCOR', entrain_w_romps_core, factor_xy)
+		call hbuf_put('DWROMCOR', detrain_w_romps_core, factor_xy)
+	end if
+	! End UBC ENT
 
 !-------------------------------------------------------------
 !	Fluxes:
