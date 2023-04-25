@@ -19,7 +19,7 @@ OCEAN = .true.,
 
 dosgs                   = .true.,
 dodamping               = .true.,
-doupperbound  	        = .true.,
+doupperbound            = .true.,
 docloud                 = .true.,
 doprecip                = .true., 
 dosurface               = .true.,
@@ -68,7 +68,7 @@ latitude0 = 18.,
 
 day0 = 180.,
 
-nstop                   = 86400,
+nstop                   = 21600,
 nprint                  = 60,
 nstat                   = 60,
 nstatfrq                = 60,
