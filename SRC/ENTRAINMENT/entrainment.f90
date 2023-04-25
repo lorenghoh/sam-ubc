@@ -6,7 +6,7 @@ use params
 use grid
 use tetrahedral_entrainment
 use romps
-use microphysics, only: nmicro_fields, micro_field, iqv
+use microphysics, only: nmicro_fields, micro_field
 
 implicit none
 
@@ -148,7 +148,7 @@ CONTAINS
     core_mask = all(core_values > 0., dim=4)
 
     entrain_vars_old(:, :, :, 1) = 1.
-    entrain_vars_old(:, :, :, 2) = micro_field(:, :, :, iqv)
+    entrain_vars_old(:, :, :, 2) = micro_field(:, :, :, 1)
     entrain_vars_old(:, :, :, 3) = t
     entrain_vars_old(:, :, :, 4) = w_on_rho
 
@@ -520,7 +520,7 @@ CONTAINS
                        dimy1_s, dimy2_s, &
                        nzm, 1,1,1,1, ent_id+2)
 
-    entrain_vars(:, :, :, 2) = micro_field(:, :, :, iqv)
+    entrain_vars(:, :, :, 2) = micro_field(:, :, :, 1)
     entrain_vars(:, :, :, 3) = t
     entrain_vars(:, :, :, 4) = w_on_rho
 
