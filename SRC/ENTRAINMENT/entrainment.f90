@@ -560,7 +560,7 @@ CONTAINS
     call add_to_namelist(count, entcount, name, longname, units, 0)
 
     name = 'ETTETCLD'
-    longname = 'TetrTetrahedral Cloud LWMSE Entrainmentrainment'
+    longname = 'Tetrahedral Cloud LWMSE Entrainmentrainment'
     units = 'K kg/s/m3'
     call add_to_namelist(count, entcount, name, longname, units, 0)
 
@@ -651,7 +651,7 @@ CONTAINS
     call add_to_namelist(count, entcount, name, longname, units, 0)
 
     name = 'ETTETCOR'
-    longname = 'TetrTetrahedral Core LWMSE Entrainment'
+    longname = 'Tetrahedral Core LWMSE Entrainment'
     units = 'K kg/s/m3'
     call add_to_namelist(count, entcount, name, longname, units, 0)
 
