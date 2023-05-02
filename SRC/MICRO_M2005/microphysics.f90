@@ -1500,7 +1500,7 @@ subroutine satadj_liquid(nzm,tabs,qt,qc,pres)
   !bloss/qt: quick saturation adjustment to compute cloud liquid water content.
   do k = 1,nzm
     tabs1 = tabs(k) 
-    esat1 = polysvp(tabs1,0)
+    esat1 = MIN(0.99*pres(k), polysvp(tabs1,0)) ! fix from Hugh for low pressure
     qsat1 = 0.622*esat1/ (pres(k) - esat1)
     qc(k) = 0. ! no cloud unless qt > qsat
     
@@ -1523,7 +1523,8 @@ subroutine satadj_liquid(nzm,tabs,qt,qc,pres)
       ! iterate while temperature increment > thresh and niter < maxiter
       do while((ABS(dtabs).GT.thresh) .AND. (niter.lt.maxiter))
 
-        esat1 = polysvp(tabs1,0)
+        ! borrow fix for low pressure from Hugh in module_mp_graupel.f90
+        esat1 = MIN(0.99*pres(k), polysvp(tabs1,0))
         qsat1 = 0.622*esat1/ (pres(k) - esat1) ! saturation mixing ratio
 
         fff = tabs(k) - tabs1 + fac_cond*MAX(0.,qt(k) - qsat1)
