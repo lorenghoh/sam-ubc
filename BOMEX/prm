@@ -1,3 +1,5 @@
+&MICRO_M2005
+dopredictNc  = .true.
 /
 &SGS_TKE
 dosmagor = .true.
@@ -8,7 +10,7 @@ dosmagor = .true.
 caseid ='25m_1s_ent',
 
 nrestart = 0,
-nrestart_skip=59,
+nrestart_skip = 59,
 restart_sep = .true.,
 
 perturb_type = 5, 
@@ -36,9 +38,10 @@ dotracers               = .true.,
 nrad = 180
 
 doradforcing            = .false.,
-dolongwave              = .true.,
-doshortwave             = .true.,
+dolongwave              = .false.,
+doshortwave             = .false.,
 doperpetual             = .true.,
+doseasons               = .false.,
 dosolarconstant         = .true.,
 solar_constant          = 447.9211,
 zenith_angle            = 51.0198,
@@ -79,12 +82,12 @@ nsave2Dend              = 999999999,
 save2Dbin               = .false.,
 
 nsave3D                 = 60,
-nsave3Dstart            = 999999999,
+nsave3Dstart            = 10800,
 nsave3Dend              = 999999999,
 save3Dbin               = .true.,
 
 nent3D                  = 60,
-nent3Dstart             = 999999999,
+nent3Dstart             = 10800,
 nent3Dend               = 999999999,
 ent3Dbin                = .true.,
 
