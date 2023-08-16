@@ -1,5 +1,3 @@
-&MICRO_M2005
-dopredictNc  = .true.
 /
 &SGS_TKE
 dosmagor = .true.
@@ -10,7 +8,7 @@ dosmagor = .true.
 caseid ='25m_1s_ent',
 
 nrestart = 0,
-nrestart_skip = 59,
+nrestart_skip = 60,
 restart_sep = .true.,
 
 perturb_type = 5, 
@@ -38,10 +36,9 @@ dotracers               = .true.,
 nrad = 180
 
 doradforcing            = .false.,
-dolongwave              = .false.,
-doshortwave             = .false.,
+dolongwave              = .true.,
+doshortwave             = .true.,
 doperpetual             = .true.,
-doseasons               = .false.,
 dosolarconstant         = .true.,
 solar_constant          = 447.9211,
 zenith_angle            = 51.0198,
@@ -68,7 +65,7 @@ latitude0 = 18.,
 
 day0 = 180.,
 
-nstop                   = 21600,
+nstop                   = 32400,
 nprint                  = 60,
 nstat                   = 60,
 nstatfrq                = 60,
