@@ -6,5 +6,7 @@ We have applied a few modifications to SAM. We added the *entrainment* module fo
 
 We have also added CmakeList.txt file for a faster and more stable build process. Take a look at README_CMAKE.md doc for a detailed description.
 
+
 Dawe, J. T., & Austin, P. H. (2011). Interpolation of LES cloud surfaces for use in direct calculations of entrainment and detrainment. *Monthly weather review*, **139(2)**, 444-456.
+
 Khairoutdinov, M. F., & Randall, D. A. (2003). Cloud resolving modeling of the ARM summer 1997 IOP: Model formulation, results, uncertainties, and sensitivities. *Journal of the Atmospheric Sciences*, **60(4)**, 607-625.
