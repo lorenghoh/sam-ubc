@@ -9,6 +9,6 @@ This version also includes a newly constructed build system based on CMake (refe
 
 ## References
 
-Dawe, J. T., & Austin, P. H. (2011). Interpolation of LES cloud surfaces for use in direct calculations of entrainment and detrainment. *Monthly weather review*, **139(2)**, 444-456, **https://doi.org/10.1175/2010MWR3473.1**
+Dawe, J. T., & Austin, P. H. (2011). Interpolation of LES cloud surfaces for use in direct calculations of entrainment and detrainment. *Monthly weather review*, **139(2)**, 444-456, **[https://doi.org/10.1175/2010MWR3473.1](https://doi.org/10.1175/2010MWR3473.1)**
 
-Khairoutdinov, M. F., & Randall, D. A. (2003). Cloud Resolving Modeling of the ARM Summer 1997 IOP: Model Formulation, Results, Uncertainties, and Sensitivities. *Journal of the Atmospheric Sciences*, **60(4)**, 607–625. **https://doi.org/10.1175/1520-0469(2003)060%3C);0607:crmota>2.0.co;2**
+Khairoutdinov, M. F., & Randall, D. A. (2003). Cloud Resolving Modeling of the ARM Summer 1997 IOP: Model Formulation, Results, Uncertainties, and Sensitivities. *Journal of the Atmospheric Sciences*, **60(4)**, 607–625, **[https://doi.org/10.1175/1520-0469(2003)060%3C);0607:crmota>2.0.co;2](https://doi.org/10.1175/1520-0469(2003)060<0607:CRMOTA>2.0.CO;2)**
