@@ -1,0 +1,80 @@
+&SGS_TKE
+dosmagor = .true.
+/
+
+&PARAMETERS
+
+ nrestart = 0
+
+ caseid ='128x128x64_2km_10s',
+
+ OCEAN = .true.,
+ doseawater = .true.,
+ LES_S = .false.
+
+ dosgs		= .true.,
+ dodamping 	= .true.,
+ doupperbound  	= .true.,
+ docloud 	= .true.,
+ doprecip 	= .true., 
+ dolongwave	= .true.,
+ doshortwave	= .true.,
+ dosurface 	= .true.,
+ dolargescale 	= .true.,
+ doradforcing   = .false.,
+ dosfcforcing   = .true.,
+ docoriolis 	= .false.,
+ donudging_uv   = .true.,
+ donudging_tq   = .false.,
+
+ tauls = 21600.,
+
+ SFC_FLX_FXD    = .false.,
+ SFC_TAU_FXD    = .false.,
+
+ dx = 	2000.,
+ dy = 	2000.,
+ dt = 	10.,
+
+ latitude0= 8.5,
+ longitude0=-23.5,
+ nrad = 30,
+
+ day0=243.,
+
+ doisccp = .true.,
+ domodis = .true.,
+ domisr = .true.,
+
+ nstop 		= 172800,
+ nprint 	= 180,
+ nstat 		= 1080,
+ nstatfrq 	= 36,
+
+! doSAMconditionals = .true.
+! dosatupdnconditionals = .true.
+
+
+ nsave2D	= 1080,
+ nsave2Dstart	= 8640,
+ nsave2Dend	= 99960480,
+
+ nsave3D	= 1080,
+ nsave3Dstart	= 8640,
+ nsave3Dend	= 99960480,
+
+ nstatmom       = 1080,
+ nstatmomstart  = 8640,
+ nstatmomend    = 99960480,
+ savemombin = .false.,
+
+ nmovie       = 12
+ nmoviestart  = 99999912
+ nmovieend    = 99960480
+
+/ 
+
+
+
+
+

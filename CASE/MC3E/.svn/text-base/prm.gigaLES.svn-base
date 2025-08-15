@@ -1,0 +1,73 @@
+&PARAMETERS
+
+ nrestart = 0
+
+ caseid ='gigaLES',
+
+ CEM = .true.,
+ LAND = .true.,
+
+ dosgs		= .true.,
+ dosmagor	= .true.,
+ doscalar	= .false.,
+ dodamping 	= .true.,
+ doupperbound  	= .true.,
+ docloud 	= .true.,
+ doprecip 	= .true., 
+ dolongwave	= .true.,
+ doshortwave	= .true.,
+ dosurface 	= .true.,
+ dolargescale 	= .true.,
+ doradforcing   = .false.,
+ dosfcforcing   = .false.,
+ docoriolis 	= .true.,
+ donudging_uv   = .true.,
+ donudging_tq   = .false.,
+ save2davg      = .true.,
+ restart_sep    = .true.,
+ save2dsep      = .true.,
+
+
+ SFC_FLX_FXD    = .false.,
+ SFC_TAU_FXD    = .false.,
+
+ tauls = 7200.,
+
+ dx = 	100.,
+ dy = 	100.,
+ dt = 	2.,
+
+ doisccp = .true.,
+
+ latitude0= 36.5,
+ longitude0=-97.5,
+
+ nrad = 15,
+
+ day0=112.00,
+
+ nstop 		= 216000,
+ nelapse        = 5400,
+ nprint 	= 150,
+ nstat 		= 150,
+ nstatfrq 	= 5,
+ nrestart_skip  = 23,
+
+! doSAMconditionals = .true.
+! dosatupdnconditionals = .true.
+
+
+ nsave2D	= 150,
+ nsave2Dstart	= 150,
+ nsave2Dend	= 999164000,
+ save2Dbin = .false.
+
+ nsave3D	= 150,
+ nsave3Dstart	= 150,
+ nsave3Dend	= 999164000,
+ save3Dbin = .false.
+
+/ 
+
+
+
